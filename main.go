@@ -23,7 +23,7 @@ func main() {
 
 	db, err := sql.Open(
 		"mysql",
-		"root:Wsl-lsW-5877@tcp(localhost:3306)/urlshortener")
+		"root:password@tcp(localhost:3306)/urlshortener")
 
 	if err != nil {
 		panic(err)
