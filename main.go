@@ -77,6 +77,21 @@ func main() {
 		})
 	})
 
+	app.Use(func(c fiber.Ctx) error {
+		start := time.Now()
+
+		err := c.Next()
+
+		fmt.Printf(
+			"%s %s %v\n",
+			c.Method(),
+			c.Path(),
+			time.Since(start),
+		)
+
+		return err
+	})
+
 	app.Get("/:shorten", func(c fiber.Ctx) error {
 		shortCode := c.Params("shorten")
 
