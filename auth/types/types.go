@@ -1,5 +1,7 @@
 package types
 
+import "sync"
+
 type DBSTATUS struct {
 	Success bool
 	Message string
@@ -30,5 +32,10 @@ type USERDATA struct {
 
 type REQUEST struct {
 	Password string `json:"password"`
-	OTP      int `json:"otp"`
+	OTP      int    `json:"otp"`
+}
+
+type RATELIMITER struct {
+	mu     sync.Mutex
+	counts map[string]int
 }
