@@ -11,7 +11,7 @@ func GetOriginal(c fiber.Ctx) error {
 	database := db.DB
 
 	//Get shortcode and assign it to code
-	code := c.Params("shorten")
+	code := c.Params("redirect")
 
 	var link string
 

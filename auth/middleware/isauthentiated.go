@@ -6,13 +6,22 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/MensahPrince/urlShortener/utils"
 )
 
 func IsAuthenticated(c fiber.Ctx) error {
 	ip := c.IP()
+	const LIMIT int = 10
 	authHeader := c.Get("Authorization")
 	if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
-		return fiber.NewError(fiber.StatusUnauthorized, "missing or invalid Authorization header")
+		allowed, err := utils.Allow(c.Context(), ip, LIMIT)
+		if err != nil{
+			return fiber.NewError(fiber.StatusInternalServerError, "rate limit check failed")
+		}
+		if !allowed{
+			return fiber.NewError(fiber.StatusUnauthorized, "Please log in to continue.")
+		}
+		return c.Next()
 	}
 
 	tokenStr := strings.TrimPrefix(authHeader, "Bearer ")
@@ -25,6 +34,7 @@ func IsAuthenticated(c fiber.Ctx) error {
 		return []byte(jwtKey), nil
 	})
 	if err != nil || !token.Valid {
+		
 		return fiber.NewError(fiber.StatusUnauthorized, "invalid or expired token")
 	}
 

@@ -2,8 +2,8 @@ package routes
 
 import (
 	auth "github.com/MensahPrince/urlShortener/auth/handlers"
-	sh "github.com/MensahPrince/urlShortener/handlers"
 	"github.com/MensahPrince/urlShortener/auth/middleware"
+	sh "github.com/MensahPrince/urlShortener/handlers"
 	"github.com/gofiber/fiber/v3"
 )
 
@@ -18,6 +18,6 @@ func SetupAuthRoutes(app *fiber.App) {
 	app.Post("/delete", middleware.JWTMiddleware, auth.DeleteAccount)
 
 	app.Get("/", sh.Base)
-	app.Post("/redirect", sh.GetOriginal)
-	app.Post("/:shorten", sh.Shorten)
+	app.Get("/:redirect", sh.GetOriginal)
+	app.Post("/shorten", middleware.IsAuthenticated, sh.Shorten)
 }
